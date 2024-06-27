@@ -1,0 +1,16 @@
+{
+  "name": "nine-pin-bowling-tracker",
+  "version": "1.0.0",
+  "description": "Score tracker for nine-pin bowling (the German Kegeln)",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Julia Friesel",
+  "license": "MIT",
+  "devDependencies": {
+    "alpinejs": "^3.14.1",
+    "eslint": "^9.5.0"
+  }
+}
