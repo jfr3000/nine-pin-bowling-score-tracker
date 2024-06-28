@@ -51,7 +51,18 @@ const exportAsTSV = function (results) {
     return Object.values(row).join('\t');
   }).join('\n')
   const tsv = [header.join('\t'), rows].join('\n')
-  downloadBlob(tsv, 'export.tsv', 'text/tab-separated-values;charset=utf-8;')
+  downloadBlob(tsv, `${getFormattedDateTime()}.tsv`, 'text/tab-separated-values;charset=utf-8;')
+}
+
+function getFormattedDateTime() {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+  const hours = String(now.getHours()).padStart(2, '0');
+  const minutes = String(now.getMinutes()).padStart(2, '0');
+  
+  return `${year}-${month}-${day}-${hours}_${minutes}`;
 }
 
 const downloadBlob = function (content, filename, contentType) {
