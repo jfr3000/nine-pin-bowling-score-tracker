@@ -6,24 +6,25 @@
   <script src="index.js"></script>
 </head>
 
-<body x-data="{selectedLane: null, results: []}">
+<body x-data="{isRightLaneSelected: false, results: []}">
   <h1>Kegel-Tracker</h1>
-  <fieldset class="score-element">
-    <legend>Gasse</legend>
-    <div>
-      <input type="radio" id="left-lane" name="selectedLane" value="left" x-model="selectedLane" required />
-      <label for="left-lane" x-text="labels.left"></label>
-    </div>
-    <div>
-      <input type="radio" id="right-lane" name="selectedLane" value="right" x-model="selectedLane" required />
-      <label for="right-lane" x-text="labels.right"></label>
-    </div>
-  </fieldset>
 
   <fieldset class="score-element">
     <template x-for="i in [...Array(10).keys()].reverse()">
-      <button x-text="i" class="score-button" @click="addResult(selectedLane, i, results)" />
+      <button
+        x-text="i"
+        class="score-button"
+        @click="addResult(isRightLaneSelected ? 'right' : 'left' , i, results)"
+      />
     </template>
+    <label class="toggle-container">
+      <input type="checkbox" x-model="isRightLaneSelected">
+      <span class="slider"></span>
+      <div class="labels">
+          <span class="left-label" x-text="labels.left">Left</span>
+        <span class="right-label" x-text="labels.right">Right</span>
+      </div>
+  </label>
   </fieldset>
 
   <table id="results-table" x-data="results">
