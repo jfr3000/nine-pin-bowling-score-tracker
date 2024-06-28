@@ -21,7 +21,8 @@
 
  const getAverageForLine = function (allResults, i) {
   const sum = sumUpResultForLine(allResults, i)
-  return sum/(i+1)
+  const avg = sum/(i+1)
+  return Math.round(avg * 10) / 10
 }
 
  const addResult = function (selectedLane, selectedThrowScore, results) {
