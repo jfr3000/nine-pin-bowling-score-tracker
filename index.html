@@ -6,29 +6,26 @@
   <script src="index.js"></script>
 </head>
 
-<body x-data="{selectedLane: null, results: [], selectedThrowScore: null}">
+<body x-data="{selectedLane: null, results: []}">
   <h1>Kegel-Tracker</h1>
-  <form id="score-form">
-    <fieldset class="score-element">
-      <legend>Gasse</legend>
-      <div>
-        <input type="radio" id="left-lane" name="selectedLane" value="left" x-model="selectedLane" required/>
-        <label for="left-lane" x-text="labels.left"></label>
-      </div>
-      <div>
-        <input type="radio" id="right-lane" name="selectedLane" value="right" x-model="selectedLane" required/>
-        <label for="right-lane" x-text="labels.right"></label>
-      </div>
-    </fieldset>
+  <fieldset class="score-element">
+    <legend>Gasse</legend>
+    <div>
+      <input type="radio" id="left-lane" name="selectedLane" value="left" x-model="selectedLane" required />
+      <label for="left-lane" x-text="labels.left"></label>
+    </div>
+    <div>
+      <input type="radio" id="right-lane" name="selectedLane" value="right" x-model="selectedLane" required />
+      <label for="right-lane" x-text="labels.right"></label>
+    </div>
+  </fieldset>
 
-    <fieldset class="score-element">
-      <legend x-text="labels.bowlingThrow"></legend>
-      <input type="number" id="throwScoreField" name="throwScore" min="0" max="9" x-model="selectedThrowScore" required/>
-    </fieldset>
-  </form>
+  <fieldset class="score-element">
+    <template x-for="i in [...Array(10).keys()].reverse()">
+      <button x-text="i" class="score-button" @click="addResult(selectedLane, i, results)" />
+    </template>
+  </fieldset>
 
-  <button @click="addResult(selectedLane, selectedThrowScore, results); selectedThrowScore = null" x-text="labels.addThrow"></button>
-  
   <table id="results-table" x-data="results">
     <thead>
       <tr>
@@ -38,16 +35,13 @@
       </tr>
     </thead>
     <tbody>
-      <template x-if="!results">
-        <tr><td colspan="4"><i>Loading...</i></td></tr>
-      </template>
       <template x-for="line in renderTableFromRawResults(results)">
         <tr>
-          <td x-text="line.throwScore"></td>   
-          <td x-text="line.sum"></td>   
-          <td x-text="line.lane"></td>   
-          <td x-text="line.sevenAverage"></td>   
-          <td x-text="line.average"></td>   
+          <td x-text="line.throwScore"></td>
+          <td x-text="line.sum"></td>
+          <td x-text="line.lane"></td>
+          <td x-text="line.sevenAverage"></td>
+          <td x-text="line.average"></td>
         </tr>
       </template>
     </tbody>

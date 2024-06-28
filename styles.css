@@ -711,6 +711,13 @@ sub {
 }
 
 .score-element {
-  display: inline-block;
-  vertical-align: top;
+  grid-template-columns: repeat(3, 1fr);
+  display: grid;
+  grid-column-gap: 10px;
+  justify-content: center;
 }
+
+button.score-button:last-of-type {
+  grid-column: 2;
+}
+

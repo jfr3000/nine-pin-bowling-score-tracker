@@ -4,7 +4,6 @@
   left: 'links',
   right: 'rechts',
   throwScore: 'Holz',
-  bowlingThrow: 'Wurf',
   sum: 'Summe',
   lane: 'Gasse',
   sevenAverage: '7er-Schnitt',
@@ -26,8 +25,6 @@
 }
 
  const addResult = function (selectedLane, selectedThrowScore, results) {
-  const isValid = document.forms["score-form"].reportValidity()
-  if (!isValid) return
   results.push({ lane: selectedLane, throwScore: parseInt(selectedThrowScore) })
 }
 
