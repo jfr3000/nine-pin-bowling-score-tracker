@@ -75,10 +75,10 @@ html {
 body {
   color: var(--text);
   background-color: var(--bg);
-  font-size: 1.15rem;
+  font-size: 3rem;
   line-height: 1.5;
   display: grid;
-  grid-template-columns: 1fr min(45rem, 90%) 1fr;
+  grid-template-columns: 1fr 90% 1fr;
   margin: 0;
 }
 
@@ -758,7 +758,7 @@ button.score-button:last-of-type {
   grid-column: 1;
   grid-row: 4;
   container-type: size;
-  margin: 10%;  
+  margin: 10%; 
 }
 
 .toggle-container input {
