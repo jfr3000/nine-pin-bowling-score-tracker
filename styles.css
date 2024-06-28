@@ -758,6 +758,7 @@ button.score-button:last-of-type {
   grid-column: 1;
   grid-row: 4;
   container-type: size;
+  margin: 10%;  
 }
 
 .toggle-container input {
@@ -794,6 +795,12 @@ button.score-button:last-of-type {
   transform: translateX(100%);
 }
 
-fieldset.score-element button {
+div.score-element button {
   aspect-ratio: 2/1;
+}
+
+#results-table {
+  width: 100%;
+  margin: 15% 0;
+  font-size: 4cqw;
 }
