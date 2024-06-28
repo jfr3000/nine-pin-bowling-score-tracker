@@ -27,28 +27,29 @@
   </label>
 </div>
 
-  <table id="results-table" x-data="results">
-    <thead>
-      <tr>
-        <template x-for="headerLabel in header">
-          <th x-text="headerLabel" />
-        </template>
-      </tr>
-    </thead>
-    <tbody>
-      <template x-for="line in renderTableFromRawResults(results)">
+  <div x-show="results.length > 0">
+    <table id="results-table" x-data="results" >
+      <thead>
         <tr>
-          <td x-text="line.throwScore"></td>
-          <td x-text="line.sum"></td>
-          <td x-text="line.lane"></td>
-          <td x-text="line.sevenAverage"></td>
-          <td x-text="line.average"></td>
+          <template x-for="headerLabel in header">
+            <th x-text="headerLabel" />
+          </template>
         </tr>
-      </template>
-    </tbody>
-  </table>
-
-  <button @click="exportAsTSV(results)" x-text="labels.export"></button>
+      </thead>
+      <tbody>
+        <template x-for="line in renderTableFromRawResults(results)">
+          <tr>
+            <td x-text="line.throwScore"></td>
+            <td x-text="line.sum"></td>
+            <td x-text="line.lane"></td>
+            <td x-text="line.sevenAverage"></td>
+            <td x-text="line.average"></td>
+          </tr>
+        </template>
+      </tbody>
+    </table>
+    <button @click="exportAsTSV(results)" x-text="labels.export"></button>
+  </div>
 
 </body>
 
