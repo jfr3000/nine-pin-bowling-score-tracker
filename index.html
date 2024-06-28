@@ -9,7 +9,7 @@
 <body x-data="{isRightLaneSelected: false, results: []}">
   <h1>Kegel-Tracker</h1>
 
-  <fieldset class="score-element">
+  <div class="score-element">
     <template x-for="i in [...Array(10).keys()].reverse()">
       <button
         x-text="i"
@@ -25,7 +25,7 @@
         <span class="right-label" x-text="labels.right">Right</span>
       </div>
   </label>
-  </fieldset>
+</div>
 
   <table id="results-table" x-data="results">
     <thead>
