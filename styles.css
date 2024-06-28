@@ -423,7 +423,7 @@ figure>table {
 
 td,
 th {
-  border: 1px solid var(--border);
+  border: 2px solid var(--border);
   text-align: start;
   padding: 0.5rem;
 }
@@ -752,9 +752,8 @@ button.score-button:last-of-type {
   position: relative;
   height: 70%;
   align-self: center;
-  border: 1px solid var(--border);
+  border: 2px solid var(--border);
   border-radius: 20px;
-  transition: background-color 0.4s;
   grid-column: 1;
   grid-row: 4;
   container-type: size;
@@ -788,7 +787,7 @@ button.score-button:last-of-type {
   justify-content: space-between;
   padding: 0 10px;
   pointer-events: none;
-  font-size: 15cqw;
+  font-size: 35cqw;
 }
 
 .toggle-container input:checked+.slider {

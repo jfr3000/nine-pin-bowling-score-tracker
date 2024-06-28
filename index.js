@@ -3,6 +3,8 @@
 const labels = {
   left: 'links',
   right: 'rechts',
+  toggleLeft: 'L',
+  toggleRight: 'R',
   throwScore: 'Holz',
   sum: 'Summe',
   lane: 'Gasse',
