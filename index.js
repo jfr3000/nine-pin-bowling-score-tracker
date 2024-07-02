@@ -30,7 +30,9 @@ const getAverageForLine = function (allResults, i) {
 const getSevenAverageDiffForLine = function (results, i) {
   const sevenAverageSum = (i + 1) * 7
   const actualSum = sumUpResultForLine(results, i)
-  return sevenAverageSum - actualSum
+  const diff = sevenAverageSum - actualSum
+  // we want to display the number as negative when actual score is low
+  return -diff
 }
 
 // eslint-disable-next-line no-unused-vars
