@@ -50,6 +50,7 @@
       </tbody>
     </table>
     <div id="action-buttons">
+      <button @click="deleteLastThrow(results)" x-text="labels.deleteLast"></button>
       <button @click="exportAsTSV(results)" x-text="labels.export"></button>
       <button @click="deleteResults(results)" x-text="labels.delete"></button>
     </div>

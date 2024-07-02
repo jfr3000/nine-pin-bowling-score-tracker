@@ -11,7 +11,8 @@ const labels = {
   addThrow: "Wurf hinzufügen",
   export: "Exportieren",
   throwNumber: "Wurf",
-  delete: "Tabelle löschen"
+  delete: "Tabelle löschen",
+  deleteLast: "Letzten Wurf löschen"
 }
 
 const sumUpResultForLine = function (allResults, i) {
@@ -118,4 +119,9 @@ const getResultsFromStorage = function () {
 const deleteResults = function (results) {
   results.splice(0, results.length)
   localStorage.removeItem('results')
+}
+
+// eslint-disable-next-line no-unused-vars
+const deleteLastThrow = function (results) {
+  results.pop()
 }
