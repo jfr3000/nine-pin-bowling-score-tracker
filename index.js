@@ -10,7 +10,8 @@ const labels = {
   average: "Schnitt",
   addThrow: "Wurf hinzufügen",
   export: "Exportieren",
-  throwNumber: "Wurf"
+  throwNumber: "Wurf",
+  delete: "Tabelle löschen"
 }
 
 const sumUpResultForLine = function (allResults, i) {
@@ -38,6 +39,7 @@ const addResult = function (selectedLane, selectedThrowScore, results) {
     lane: selectedLane,
     throwScore: parseInt(selectedThrowScore),
   })
+  persistResults(results)
 }
 
 const renderTableFromRawResults = function (results) {
@@ -97,4 +99,21 @@ const downloadBlob = function (content, filename, contentType) {
   pom.href = url
   pom.setAttribute("download", filename)
   pom.click()
+}
+
+const persistResults = function(results) {
+  localStorage.setItem('results', JSON.stringify(results))
+}
+
+// eslint-disable-next-line no-unused-vars
+const getResultsFromStorage = function () {
+  const results = localStorage.getItem('results')
+  if (!results) return []
+  return JSON.parse(results)
+}
+
+// eslint-disable-next-line no-unused-vars
+const deleteResults = function (results) {
+  results.splice(0, results.length)
+  localStorage.removeItem('results')
 }

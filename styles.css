@@ -803,3 +803,8 @@ div.score-element button {
   margin: 15% 0;
   font-size: 4cqw;
 }
+
+#action-buttons {
+  display: flex;
+  gap: 3%;
+}
