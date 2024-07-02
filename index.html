@@ -37,7 +37,7 @@
         </tr>
       </thead>
       <tbody>
-        <template x-for="line in renderTableFromRawResults(results)">
+        <template x-for="line in renderTableFromRawResults(results).reverse()">
           <tr>
             <td x-text="line.throwNumber"></td>
             <td x-text="line.throwScore"></td>
