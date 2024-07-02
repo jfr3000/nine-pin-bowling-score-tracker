@@ -10,6 +10,7 @@ const labels = {
   average: "Schnitt",
   addThrow: "Wurf hinzufügen",
   export: "Exportieren",
+  throwNumber: "Wurf"
 }
 
 const sumUpResultForLine = function (allResults, i) {
@@ -36,6 +37,7 @@ const addResult = function (selectedLane, selectedThrowScore, results) {
 const renderTableFromRawResults = function (results) {
   return results.map((result, i) => {
     return {
+      throwNumber: i + 1,
       throwScore: result.throwScore,
       sum: sumUpResultForLine(results, i),
       lane: labels[result.lane],
@@ -46,6 +48,7 @@ const renderTableFromRawResults = function (results) {
 }
 
 const header = [
+  labels.throwNumber,
   labels.throwScore,
   labels.sum,
   labels.lane,

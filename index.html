@@ -39,6 +39,7 @@
       <tbody>
         <template x-for="line in renderTableFromRawResults(results)">
           <tr>
+            <td x-text="line.throwNumber"></td>
             <td x-text="line.throwScore"></td>
             <td x-text="line.sum"></td>
             <td x-text="line.lane"></td>
