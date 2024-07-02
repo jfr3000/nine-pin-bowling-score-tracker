@@ -6,7 +6,7 @@ const labels = {
   throwScore: "Holz",
   sum: "Summe",
   lane: "Gasse",
-  sevenAverage: "7er-Schnitt",
+  sevenAverageDiff: "7er-Diff",
   average: "Schnitt",
   addThrow: "Wurf hinzufügen",
   export: "Exportieren",
@@ -26,6 +26,12 @@ const getAverageForLine = function (allResults, i) {
   return Math.round(avg * 10) / 10
 }
 
+const getSevenAverageDiffForLine = function (results, i) {
+  const sevenAverageSum = (i + 1) * 7
+  const actualSum = sumUpResultForLine(results, i)
+  return sevenAverageSum - actualSum
+}
+
 // eslint-disable-next-line no-unused-vars
 const addResult = function (selectedLane, selectedThrowScore, results) {
   results.push({
@@ -41,7 +47,7 @@ const renderTableFromRawResults = function (results) {
       throwScore: result.throwScore,
       sum: sumUpResultForLine(results, i),
       lane: labels[result.lane],
-      sevenAverage: (i + 1) * 7,
+      sevenAverageDiff: getSevenAverageDiffForLine(results, i),
       average: getAverageForLine(results, i),
     }
   })
@@ -52,8 +58,8 @@ const header = [
   labels.throwScore,
   labels.sum,
   labels.lane,
-  labels.sevenAverage,
   labels.average,
+  labels.sevenAverageDiff,
 ]
 
 // eslint-disable-next-line no-unused-vars
