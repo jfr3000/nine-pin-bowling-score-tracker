@@ -53,7 +53,6 @@ export default [...compat.extends("eslint:recommended"), {
     }],
 
     "no-spaced-func": 2,
-    "comma-dangle": [2, "never"],
     "no-trailing-spaces": 2,
     yoda: [2, "never"],
     "eol-last": 2,
@@ -76,7 +75,6 @@ export default [...compat.extends("eslint:recommended"), {
 
     "spaced-comment": [2, "always"],
     "space-before-blocks": [2, "always"],
-    "space-before-function-paren": [2, "always"],
 
     indent: [2, 2, {
       SwitchCase: 1
