@@ -52,8 +52,8 @@ const renderTableFromRawResults = function (results) {
       throwScore: result.throwScore,
       sum: sumUpResultForLine(results, i),
       lane: labels[result.lane],
-      sevenAverageDiff: getSevenAverageDiffForLine(results, i),
       average: getAverageForLine(results, i),
+      sevenAverageDiff: getSevenAverageDiffForLine(results, i),
     }
   })
 }
