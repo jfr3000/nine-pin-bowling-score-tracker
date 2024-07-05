@@ -451,7 +451,7 @@
       "sizes": "1024x1024"
     }
   ],
-  "start_url": "nine-pin-bowling-score-tracker/index.html",
+  "start_url": "https://jfr.codes/nine-pin-bowling-score-tracker/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#000000"
