@@ -738,14 +738,7 @@ sub {
   display: grid;
   grid-column-gap: 10px;
   justify-content: center;
-}
-
-button.score-button {
-  font-size: 9cqw;
-}
-
-button.score-button:last-of-type {
-  grid-column: 2;
+  margin: 0 15%;
 }
 
 .toggle-container {
@@ -795,12 +788,17 @@ button.score-button:last-of-type {
 }
 
 div.score-element button {
-  aspect-ratio: 2/1;
+  aspect-ratio: 1;
+  font-size: 9cqw;
+}
+
+div.score-element button:last-of-type {
+  grid-column: 2;
 }
 
 #results-table {
   width: 100%;
-  margin: 15% 0;
+  margin: 5% 0;
   font-size: 4cqw;
 }
 
