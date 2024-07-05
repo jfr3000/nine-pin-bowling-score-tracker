@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 
 <head>
+  <link rel="manifest" href="manifest.json" />
   <link rel="stylesheet" href="styles.css">
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x/dist/cdn.min.js"></script>
   <script src="index.js"></script>
@@ -55,6 +56,11 @@
       <button @click="deleteResults(results)" x-text="labels.delete"></button>
     </div>
 
+  <script>
+    if (typeof navigator.serviceWorker !== 'undefined') {
+      navigator.serviceWorker.register('sw.js')
+    }
+  </script>
 </body>
 
 </html>
