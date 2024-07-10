@@ -1,3 +1,97 @@
+document.addEventListener("alpine:init", () => {
+  Alpine.store("app", {
+    init: function () {
+      this.getSettingsFromStorage()
+      this.getResultsFromStorage()
+    },
+    settings: defaultSettings,
+    get header() {
+      return this.settings.filter((x) => x.display)
+    },
+    initialHeaderForSettingsList: defaultSettings,
+    results: [],
+    addResult: function (selectedLane, selectedThrowScore) {
+      this.results.push({
+        lane: selectedLane,
+        throwScore: parseInt(selectedThrowScore),
+      })
+      this.persistResults()
+    },
+    getRenderFuncsForRow: function (i) {
+      const resultForRow = this.results[i]
+      return {
+        throwNumber: () => i + 1,
+        throwScore: () => resultForRow.throwScore,
+        sum: () => sumUpResultForLine(this.results, i),
+        lane: () => labels[resultForRow.lane],
+        average: () => getAverageForLine(this.results, i),
+        sevenAverageDiff: () => getSevenAverageDiffForLine(this.results, i),
+      }
+    },
+    renderTableFromRawResults: function () {
+      const userRow = this.settings
+        .filter((setting) => setting.display)
+        .map((setting) => setting.id)
+      return this.results.map((_, i) => {
+        const renderFuncsForRow = this.getRenderFuncsForRow(i)
+        return userRow.map((columnId) => renderFuncsForRow[columnId]())
+      })
+    },
+    exportAsTSV: function () {
+      const completedTable = this.renderTableFromRawResults()
+      const rows = completedTable
+        .map((row) => {
+          return Object.values(row).join("\t")
+        })
+        .join("\n")
+      const tsv = [this.header.join("\t"), rows].join("\n")
+      downloadBlob(
+        tsv,
+        `${getFormattedDateTime()}.tsv`,
+        "text/tab-separated-values;charset=utf-8;"
+      )
+    },
+    deleteResults: function () {
+      this.results.splice(0, this.results.length)
+      localStorage.removeItem("results")
+    },
+    deleteLastThrow: function () {
+      this.results.pop()
+      this.persistResults()
+    },
+    persistResults: function () {
+      localStorage.setItem("results", JSON.stringify(this.results))
+    },
+    persistSettings: function () {
+      localStorage.setItem("settings", JSON.stringify(this.settings))
+    },
+    resetSettings: function () {
+      this.settings = defaultSettings
+      localStorage.removeItem("settings")
+    },
+    handleColumnSettingsDrag: function (columnId, position) {
+      const newSettings = Alpine.store('app').settings.slice()
+      const fromIndex = newSettings.findIndex((item) => item.id === columnId)
+      const cutItem = newSettings.splice(fromIndex, 1)[0]
+      newSettings.splice(position, 0, cutItem)
+      Alpine.store('app').settings = newSettings
+      Alpine.store('app').persistSettings()
+    },
+    getResultsFromStorage: function () {
+      const results = localStorage.getItem("results")
+      if (!results) return []
+      this.results = JSON.parse(results)
+    },
+    getSettingsFromStorage: function () {
+      const settings = localStorage.getItem("settings")
+      if (!settings) return defaultSettings
+      const parsed = JSON.parse(settings)
+      this.settings = parsed
+      this.initialHeaderForSettingsList = parsed
+    },
+  })
+})
+
 const labels = {
   left: "links",
   right: "rechts",
@@ -12,8 +106,41 @@ const labels = {
   export: "Exportieren",
   throwNumber: "Wurf",
   delete: "Tabelle löschen",
-  deleteLast: "Letzten Wurf löschen"
+  deleteLast: "Letzten Wurf löschen",
 }
+
+const defaultSettings = [
+  {
+    id: "throwNumber",
+    label: labels.throwNumber,
+    display: true,
+  },
+  {
+    id: "throwScore",
+    label: labels.throwScore,
+    display: true,
+  },
+  {
+    id: "sum",
+    label: labels.sum,
+    display: true,
+  },
+  {
+    id: "lane",
+    label: labels.lane,
+    display: true,
+  },
+  {
+    id: "average",
+    label: labels.average,
+    display: true,
+  },
+  {
+    id: "sevenAverageDiff",
+    label: labels.sevenAverageDiff,
+    display: true,
+  },
+]
 
 const sumUpResultForLine = function (allResults, i) {
   return allResults
@@ -36,54 +163,7 @@ const getSevenAverageDiffForLine = function (results, i) {
   return -diff
 }
 
-// eslint-disable-next-line no-unused-vars
-const addResult = function (selectedLane, selectedThrowScore, results) {
-  results.push({
-    lane: selectedLane,
-    throwScore: parseInt(selectedThrowScore),
-  })
-  persistResults(results)
-}
-
-const renderTableFromRawResults = function (results) {
-  return results.map((result, i) => {
-    return {
-      throwNumber: i + 1,
-      throwScore: result.throwScore,
-      sum: sumUpResultForLine(results, i),
-      lane: labels[result.lane],
-      average: getAverageForLine(results, i),
-      sevenAverageDiff: getSevenAverageDiffForLine(results, i),
-    }
-  })
-}
-
-const header = [
-  labels.throwNumber,
-  labels.throwScore,
-  labels.sum,
-  labels.lane,
-  labels.average,
-  labels.sevenAverageDiff,
-]
-
-// eslint-disable-next-line no-unused-vars
-const exportAsTSV = function (results) {
-  const completedTable = renderTableFromRawResults(results)
-  const rows = completedTable
-    .map((row) => {
-      return Object.values(row).join("\t")
-    })
-    .join("\n")
-  const tsv = [header.join("\t"), rows].join("\n")
-  downloadBlob(
-    tsv,
-    `${getFormattedDateTime()}.tsv`,
-    "text/tab-separated-values;charset=utf-8;"
-  )
-}
-
-function getFormattedDateTime() {
+const getFormattedDateTime = function () {
   const now = new Date()
   const year = now.getFullYear()
   const month = String(now.getMonth() + 1).padStart(2, "0")
@@ -102,26 +182,4 @@ const downloadBlob = function (content, filename, contentType) {
   pom.href = url
   pom.setAttribute("download", filename)
   pom.click()
-}
-
-const persistResults = function(results) {
-  localStorage.setItem('results', JSON.stringify(results))
-}
-
-// eslint-disable-next-line no-unused-vars
-const getResultsFromStorage = function () {
-  const results = localStorage.getItem('results')
-  if (!results) return []
-  return JSON.parse(results)
-}
-
-// eslint-disable-next-line no-unused-vars
-const deleteResults = function (results) {
-  results.splice(0, results.length)
-  localStorage.removeItem('results')
-}
-
-// eslint-disable-next-line no-unused-vars
-const deleteLastThrow = function (results) {
-  results.pop()
 }

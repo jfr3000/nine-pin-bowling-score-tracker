@@ -3,18 +3,19 @@
 <head>
   <link rel="manifest" href="manifest.json" />
   <link rel="stylesheet" href="styles.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/sort@3.x.x/dist/cdn.min.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x/dist/cdn.min.js"></script>
   <script src="index.js"></script>
 </head>
 
-<body x-data="{isRightLaneSelected: false, results: getResultsFromStorage()}">
+<body x-data="{isRightLaneSelected: false}">
   <h1>Kegel-Tracker</h1>
 
   <div class="score-element">
     <template x-for="i in [...Array(10).keys()].reverse()">
       <button
         x-text="i"
-        @click="addResult(isRightLaneSelected ? 'right' : 'left' , i, results)"
+        @click="$store.app.addResult(isRightLaneSelected ? 'right' : 'left' , i)"
       />
     </template>
     <label class="toggle-container">
@@ -27,33 +28,39 @@
   </label>
 </div>
 
-  <div x-show="results.length > 0">
-    <table id="results-table" x-data="results" >
+  <div x-show="$store.app.results.length > 0">
+    <table id="results-table" x-data="$store.app.results" >
       <thead>
         <tr>
-          <template x-for="headerLabel in header">
-            <th x-text="headerLabel" />
+          <template x-for="columnHeader in $store.app.header">
+            <th x-text="columnHeader.label" />
           </template>
         </tr>
       </thead>
       <tbody>
-        <template x-for="line in renderTableFromRawResults(results).reverse()">
+        <template x-for="line in $store.app.renderTableFromRawResults().reverse()">
           <tr>
-            <td x-text="line.throwNumber"></td>
-            <td x-text="line.throwScore"></td>
-            <td x-text="line.sum"></td>
-            <td x-text="line.lane"></td>
-            <td x-text="line.average"></td>
-            <td x-text="line.sevenAverageDiff"></td>
+            <template x-for="field in line">
+                <td x-text="field"></td>
+            </template>
           </tr>
         </template>
       </tbody>
     </table>
     <div id="action-buttons">
-      <button @click="deleteLastThrow(results)" x-text="labels.deleteLast"></button>
-      <button @click="exportAsTSV(results)" x-text="labels.export"></button>
-      <button @click="deleteResults(results)" x-text="labels.delete"></button>
+      <button @click="$store.app.deleteLastThrow()" x-text="labels.deleteLast"></button>
+      <button @click="$store.app.exportAsTSV()" x-text="labels.export"></button>
+      <button @click="$store.app.deleteResults()" x-text="labels.delete"></button>
     </div>
+  </div>
+
+  <ul x-sort="$store.app.handleColumnSettingsDrag">
+    <template x-for="columnHeader in $store.app.initialHeaderForSettingsList">
+      <li x-sort:item="columnHeader.id">
+        <input type="checkbox" id="scales" name="scales" checked />
+        <span x-text="columnHeader.label" />
+      </li>
+  </ul>
 
   <script>
     if (typeof navigator.serviceWorker !== 'undefined') {
