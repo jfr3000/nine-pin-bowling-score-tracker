@@ -511,22 +511,6 @@ input[type="radio"]:checked {
   background-color: var(--accent);
 }
 
-input[type="checkbox"]:checked::after {
-  /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
-  content: " ";
-  width: 0.18em;
-  height: 0.32em;
-  border-radius: 0;
-  position: absolute;
-  top: 0.05em;
-  left: 0.17em;
-  background-color: transparent;
-  border-right: solid var(--bg) 0.08em;
-  border-bottom: solid var(--bg) 0.08em;
-  font-size: 1.8em;
-  transform: rotate(45deg);
-}
-
 input[type="radio"]:checked::after {
   /* creates a colored circle for the checked radio button  */
   content: " ";
@@ -805,4 +789,13 @@ div.score-element button:last-of-type {
 #action-buttons {
   display: flex;
   gap: 3%;
+}
+ 
+#column-settings {
+  list-style-type: none;
+}
+
+#column-settings input {
+  height: 3rem;
+  aspect-ratio: 1;
 }

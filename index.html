@@ -54,7 +54,7 @@
     </div>
   </div>
 
-  <ul x-sort="$store.app.handleColumnSettingsDrag">
+  <ul x-sort="$store.app.handleColumnSettingsDrag" id="column-settings">
     <template x-for="columnHeader in $store.app.initialHeaderForSettingsList">
       <li x-sort:item="columnHeader.id">
         <input type="checkbox" id="scales" name="scales" checked />
