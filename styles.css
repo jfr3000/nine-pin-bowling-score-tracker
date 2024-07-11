@@ -799,3 +799,8 @@ div.score-element button:last-of-type {
   height: 3rem;
   aspect-ratio: 1;
 }
+
+#column-settings li::before {
+  content: "≡";
+  font-weight: lighter;
+}
