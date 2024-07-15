@@ -805,7 +805,7 @@ div.score-element button:last-of-type {
   aspect-ratio: 1;
 }
 
-#column-settings li::before {
-  content: "≡";
+#column-settings .drag-handle {
   font-weight: lighter;
+  padding: 1rem;
 }
