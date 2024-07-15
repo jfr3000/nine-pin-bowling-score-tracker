@@ -39,15 +39,20 @@ document.addEventListener("alpine:init", () => {
     },
     exportAsTSV() {
       const completedTable = this.renderTableFromRawResults()
+      const date = getFormattedDate()
       const rows = completedTable
         .map((row) => {
-          return Object.values(row).join("\t")
+          const rowArray = Object.values(row)
+          rowArray.unshift(date)
+          return rowArray.join("\t")
         })
         .join("\n")
-      const tsv = [this.header.join("\t"), rows].join("\n")
+      const header = this.header.map(c=>c.label)
+      header.unshift(labels.date)
+      const tsv = [header.join("\t"), rows].join("\n")
       downloadBlob(
         tsv,
-        `${getFormattedDateTime()}.tsv`,
+        `${date}.tsv`,
         "text/tab-separated-values;charset=utf-8;"
       )
     },
@@ -119,6 +124,7 @@ const labels = {
   close: "Schliessen",
   reset: "Zurücksetzen",
   settings: "Einstellungen",
+  date: "Datum"
 }
 
 const defaultSettings = [
@@ -164,7 +170,7 @@ const sumUpResultForLine = function (allResults, i) {
 const getAverageForLine = function (allResults, i) {
   const sum = sumUpResultForLine(allResults, i)
   const avg = sum / (i + 1)
-  return Math.round(avg * 10) / 10
+  return avg.toFixed(2)
 }
 
 const getSevenAverageDiffForLine = function (results, i) {
@@ -175,15 +181,13 @@ const getSevenAverageDiffForLine = function (results, i) {
   return -diff
 }
 
-const getFormattedDateTime = function () {
+const getFormattedDate = function () {
   const now = new Date()
   const year = now.getFullYear()
   const month = String(now.getMonth() + 1).padStart(2, "0")
   const day = String(now.getDate()).padStart(2, "0")
-  const hours = String(now.getHours()).padStart(2, "0")
-  const minutes = String(now.getMinutes()).padStart(2, "0")
 
-  return `${year}-${month}-${day}-${hours}_${minutes}`
+  return `${year}-${month}-${day}`
 }
 
 const downloadBlob = function (content, filename, contentType) {
