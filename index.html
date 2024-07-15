@@ -58,7 +58,7 @@
 
   <div x-show="settingsOpen">
     <h2 x-text="labels.settings"></h2>
-    <ul x-sort="$store.app.handleColumnSettingsDrag()" id="column-settings">
+    <ul x-sort="$store.app.handleColumnSettingsDrag()" id="column-settings" x-sort-config="{filter: 'input', preventOnFilter: false,}">
       <template x-for="columnHeader in $store.app.initialHeaderForSettingsList">
         <li x-sort:item="columnHeader.id">
           <span x-sort:handle class="drag-handle">≡</span>

@@ -464,7 +464,7 @@ select,
 input {
   color: var(--text);
   background-color: var(--bg);
-  border: 1px solid var(--border);
+  border: 2px solid var(--border);
 }
 
 label {
