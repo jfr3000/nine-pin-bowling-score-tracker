@@ -8,59 +8,65 @@
   <script src="index.js"></script>
 </head>
 
-<body x-data="{isRightLaneSelected: false}">
+<body x-data="{isRightLaneSelected: false, settingsOpen: false}">
   <h1>Kegel-Tracker</h1>
 
-  <div class="score-element">
-    <template x-for="i in [...Array(10).keys()].reverse()">
-      <button
-        x-text="i"
-        @click="$store.app.addResult(isRightLaneSelected ? 'right' : 'left' , i)"
-      />
-    </template>
-    <label class="toggle-container">
-      <input type="checkbox" x-model="isRightLaneSelected">
-      <span class="slider"></span>
-      <div class="labels">
-        <span class="left-label" x-text="labels.toggleLeft"></span>
-        <span class="right-label" x-text="labels.toggleRight"></span>
-      </div>
-  </label>
-</div>
-
-  <div x-show="$store.app.results.length > 0">
-    <table id="results-table" x-data="$store.app.results" >
-      <thead>
-        <tr>
-          <template x-for="columnHeader in $store.app.header">
-            <th x-text="columnHeader.label" />
-          </template>
-        </tr>
-      </thead>
-      <tbody>
-        <template x-for="line in $store.app.renderTableFromRawResults().reverse()">
+  <div x-show="!settingsOpen">
+    <div class="score-element">
+      <template x-for="i in [...Array(10).keys()].reverse()">
+        <button
+          x-text="i"
+          @click="$store.app.addResult(isRightLaneSelected ? 'right' : 'left' , i)"
+        />
+      </template>
+      <label class="toggle-container">
+        <input type="checkbox" x-model="isRightLaneSelected">
+        <span class="slider"></span>
+        <div class="labels">
+          <span class="left-label" x-text="labels.toggleLeft"></span>
+          <span class="right-label" x-text="labels.toggleRight"></span>
+        </div>
+    </label>
+    </div>
+    <div x-show="$store.app.results.length > 0">
+      <table id="results-table" x-data="$store.app.results" >
+        <thead>
           <tr>
-            <template x-for="field in line">
-                <td x-text="field"></td>
+            <template x-for="columnHeader in $store.app.header">
+              <th x-text="columnHeader.label" />
             </template>
           </tr>
-        </template>
-      </tbody>
-    </table>
-    <div id="action-buttons">
-      <button @click="$store.app.deleteLastThrow()" x-text="labels.deleteLast"></button>
-      <button @click="$store.app.exportAsTSV()" x-text="labels.export"></button>
-      <button @click="$store.app.deleteResults()" x-text="labels.delete"></button>
+        </thead>
+        <tbody>
+          <template x-for="line in $store.app.renderTableFromRawResults().reverse()">
+            <tr>
+              <template x-for="field in line">
+                  <td x-text="field"></td>
+              </template>
+            </tr>
+          </template>
+        </tbody>
+      </table>
+      <div class="action-buttons">
+        <button @click="$store.app.deleteLastThrow()" x-text="labels.deleteLast"></button>
+        <button @click="$store.app.exportAsTSV()" x-text="labels.export"></button>
+        <button @click="$store.app.deleteResults()" x-text="labels.delete"></button>
+        <button @click="settingsOpen = true" x-text="labels.configure"></button>
+      </div>
     </div>
   </div>
 
-  <ul x-sort="$store.app.handleColumnSettingsDrag()" id="column-settings">
-    <template x-for="columnHeader in $store.app.initialHeaderForSettingsList">
-      <li x-sort:item="columnHeader.id">
-        <input type="checkbox" x-model="columnHeader.display" @click="$store.app.getClickHandlerForColumnSetting(columnHeader.id)"/>
-        <span x-text="columnHeader.label" />
-      </li>
-  </ul>
+  <div x-show="settingsOpen">
+    <h2 x-text="labels.settings"></h2>
+    <ul x-sort="$store.app.handleColumnSettingsDrag()" id="column-settings">
+      <template x-for="columnHeader in $store.app.initialHeaderForSettingsList">
+        <li x-sort:item="columnHeader.id">
+          <input type="checkbox" x-model="columnHeader.display" @click="$store.app.getClickHandlerForColumnSetting(columnHeader.id)"/>
+          <span x-text="columnHeader.label" />
+        </li>
+        </template>
+    </ul>
+  </div>
 
   <script>
     if (typeof navigator.serviceWorker !== 'undefined') {

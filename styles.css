@@ -786,9 +786,14 @@ div.score-element button:last-of-type {
   font-size: 4cqw;
 }
 
-#action-buttons {
-  display: flex;
-  gap: 3%;
+.action-buttons {
+  display: grid;
+}
+
+.action-buttons button {
+  margin: 2rem 0;
+  display: block;
+  padding: 2rem;
 }
  
 #column-settings {

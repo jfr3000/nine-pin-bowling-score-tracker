@@ -93,10 +93,10 @@ document.addEventListener("alpine:init", () => {
     },
     getClickHandlerForColumnSetting(columnId) {
       return function (checked) {
-        const setting = this.settings.find(s => s.id === columnId)
+        const setting = this.settings.find((s) => s.id === columnId)
         setting.display = checked
       }.bind(this)
-    }
+    },
   })
 })
 
@@ -115,6 +115,10 @@ const labels = {
   throwNumber: "Wurf",
   delete: "Tabelle löschen",
   deleteLast: "Letzten Wurf löschen",
+  configure: "Tabelle konfigurieren",
+  close: "Schliessen",
+  reset: "Zurücksetzen",
+  settings: "Einstellungen",
 }
 
 const defaultSettings = [
