@@ -1,6 +1,6 @@
 document.addEventListener("alpine:init", () => {
   Alpine.store("app", {
-    init: function () {
+    init() {
       this.getSettingsFromStorage()
       this.getResultsFromStorage()
     },
@@ -10,14 +10,14 @@ document.addEventListener("alpine:init", () => {
     },
     initialHeaderForSettingsList: defaultSettings,
     results: [],
-    addResult: function (selectedLane, selectedThrowScore) {
+    addResult(selectedLane, selectedThrowScore) {
       this.results.push({
         lane: selectedLane,
         throwScore: parseInt(selectedThrowScore),
       })
       this.persistResults()
     },
-    getRenderFuncsForRow: function (i) {
+    getRenderFuncsForRow(i) {
       const resultForRow = this.results[i]
       return {
         throwNumber: () => i + 1,
@@ -28,7 +28,7 @@ document.addEventListener("alpine:init", () => {
         sevenAverageDiff: () => getSevenAverageDiffForLine(this.results, i),
       }
     },
-    renderTableFromRawResults: function () {
+    renderTableFromRawResults() {
       const userRow = this.settings
         .filter((setting) => setting.display)
         .map((setting) => setting.id)
@@ -37,7 +37,7 @@ document.addEventListener("alpine:init", () => {
         return userRow.map((columnId) => renderFuncsForRow[columnId]())
       })
     },
-    exportAsTSV: function () {
+    exportAsTSV() {
       const completedTable = this.renderTableFromRawResults()
       const rows = completedTable
         .map((row) => {
@@ -51,44 +51,52 @@ document.addEventListener("alpine:init", () => {
         "text/tab-separated-values;charset=utf-8;"
       )
     },
-    deleteResults: function () {
+    deleteResults() {
       this.results.splice(0, this.results.length)
       localStorage.removeItem("results")
     },
-    deleteLastThrow: function () {
+    deleteLastThrow() {
       this.results.pop()
       this.persistResults()
     },
-    persistResults: function () {
+    persistResults() {
       localStorage.setItem("results", JSON.stringify(this.results))
     },
-    persistSettings: function () {
+    persistSettings() {
       localStorage.setItem("settings", JSON.stringify(this.settings))
     },
-    resetSettings: function () {
+    resetSettings() {
       this.settings = defaultSettings
       localStorage.removeItem("settings")
     },
-    handleColumnSettingsDrag: function (columnId, position) {
-      const newSettings = Alpine.store('app').settings.slice()
-      const fromIndex = newSettings.findIndex((item) => item.id === columnId)
-      const cutItem = newSettings.splice(fromIndex, 1)[0]
-      newSettings.splice(position, 0, cutItem)
-      Alpine.store('app').settings = newSettings
-      Alpine.store('app').persistSettings()
+    handleColumnSettingsDrag() {
+      return function (columnId, position) {
+        const newSettings = this.settings.slice()
+        const fromIndex = newSettings.findIndex((item) => item.id === columnId)
+        const cutItem = newSettings.splice(fromIndex, 1)[0]
+        newSettings.splice(position, 0, cutItem)
+        this.settings = newSettings
+        this.persistSettings()
+      }.bind(this)
     },
-    getResultsFromStorage: function () {
+    getResultsFromStorage() {
       const results = localStorage.getItem("results")
       if (!results) return []
       this.results = JSON.parse(results)
     },
-    getSettingsFromStorage: function () {
+    getSettingsFromStorage() {
       const settings = localStorage.getItem("settings")
       if (!settings) return defaultSettings
       const parsed = JSON.parse(settings)
       this.settings = parsed
       this.initialHeaderForSettingsList = parsed
     },
+    getClickHandlerForColumnSetting(columnId) {
+      return function (checked) {
+        const setting = this.settings.find(s => s.id === columnId)
+        setting.display = checked
+      }.bind(this)
+    }
   })
 })
 

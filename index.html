@@ -54,10 +54,10 @@
     </div>
   </div>
 
-  <ul x-sort="$store.app.handleColumnSettingsDrag" id="column-settings">
+  <ul x-sort="$store.app.handleColumnSettingsDrag()" id="column-settings">
     <template x-for="columnHeader in $store.app.initialHeaderForSettingsList">
       <li x-sort:item="columnHeader.id">
-        <input type="checkbox" id="scales" name="scales" checked />
+        <input type="checkbox" x-model="columnHeader.display" @click="$store.app.getClickHandlerForColumnSetting(columnHeader.id)"/>
         <span x-text="columnHeader.label" />
       </li>
   </ul>
