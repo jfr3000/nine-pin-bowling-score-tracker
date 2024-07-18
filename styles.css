@@ -725,6 +725,11 @@ sub {
   margin: 0 15%;
 }
 
+#delete-button {
+  grid-column: 3;
+  grid-row: 4;
+}
+
 .toggle-container {
   position: relative;
   height: 70%;

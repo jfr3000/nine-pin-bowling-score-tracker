@@ -27,6 +27,7 @@
           <span class="right-label" x-text="labels.toggleRight"></span>
         </div>
     </label>
+    <button @click="$store.app.deleteLastThrow()" x-text="labels.deleteLast" id="delete-button"></button>
     </div>
     <div x-show="$store.app.results.length > 0">
       <table id="results-table" x-data="$store.app.results" >
@@ -48,7 +49,6 @@
         </tbody>
       </table>
       <div class="action-buttons">
-        <button @click="$store.app.deleteLastThrow()" x-text="labels.deleteLast"></button>
         <button @click="$store.app.exportAsTSV()" x-text="labels.export"></button>
         <button @click="$store.app.deleteResults()" x-text="labels.delete"></button>
         <button @click="settingsOpen = true" x-text="labels.configure"></button>

@@ -47,7 +47,7 @@ document.addEventListener("alpine:init", () => {
           return rowArray.join("\t")
         })
         .join("\n")
-      const header = this.header.map(c=>c.label)
+      const header = this.header.map((c) => c.label)
       header.unshift(labels.date)
       const tsv = [header.join("\t"), rows].join("\n")
       downloadBlob(
@@ -61,8 +61,10 @@ document.addEventListener("alpine:init", () => {
       localStorage.removeItem("results")
     },
     deleteLastThrow() {
-      this.results.pop()
-      this.persistResults()
+      if (confirm(labels.confirmDelete)) {
+        this.results.pop()
+        this.persistResults()
+      }
     },
     persistResults() {
       localStorage.setItem("results", JSON.stringify(this.results))
@@ -120,12 +122,13 @@ const labels = {
   export: "Exportieren",
   throwNumber: "Wurf",
   delete: "Tabelle löschen",
-  deleteLast: "Letzten Wurf löschen",
+  deleteLast: "🗑️",
   configure: "Tabelle konfigurieren",
   close: "Schliessen",
   reset: "Zurücksetzen",
   settings: "Einstellungen",
-  date: "Datum"
+  date: "Datum",
+  confirmDelete: "Letzten Wurf wirklich löschen?",
 }
 
 const defaultSettings = [
