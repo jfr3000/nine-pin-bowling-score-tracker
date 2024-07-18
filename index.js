@@ -97,9 +97,10 @@ document.addEventListener("alpine:init", () => {
       this.initialHeaderForSettingsList = parsed
     },
     getClickHandlerForColumnSetting(columnId) {
-      return function (checked) {
+      return function (e) {
         const setting = this.settings.find((s) => s.id === columnId)
-        setting.display = checked
+        setting.display = e.target.checked
+        this.persistSettings()
       }.bind(this)
     },
   })
