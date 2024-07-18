@@ -3,6 +3,7 @@ document.addEventListener("alpine:init", () => {
     init() {
       this.getSettingsFromStorage()
       this.getResultsFromStorage()
+      this.throwCounter = getCurrentLaneThrows(this.results, this.selectedLane)
     },
     settings: defaultSettings,
     get header() {
@@ -10,12 +11,34 @@ document.addEventListener("alpine:init", () => {
     },
     initialHeaderForSettingsList: defaultSettings,
     results: [],
-    addResult(selectedLane, selectedThrowScore) {
+    isRightLaneSelected: false,
+    get selectedLane() {
+      return this.isRightLaneSelected ? "right" : "left"
+    },
+    throwCounter: 0,
+    addResult(selectedThrowScore) {
+      this.ensureCorrectLane()
       this.results.push({
-        lane: selectedLane,
+        lane: this.selectedLane,
         throwScore: parseInt(selectedThrowScore),
       })
       this.persistResults()
+    },
+    ensureCorrectLane() {
+      const previouslyPlayedLane = this.results.length
+        ? this.results[this.results.length - 1].lane
+        : this.selectedLane
+      const hasJustBeenToggled = this.selectedLane !== previouslyPlayedLane
+      if (hasJustBeenToggled) this.resetThrowCounter()
+      this.throwCounter++
+      // switch lane every 15 throws
+      if (this.throwCounter === 16) {
+        this.isRightLaneSelected = !this.isRightLaneSelected
+        this.throwCounter = 1
+      }
+    },
+    resetThrowCounter() {
+      this.throwCounter = 0
     },
     getRenderFuncsForRow(i) {
       const resultForRow = this.results[i]
@@ -58,6 +81,8 @@ document.addEventListener("alpine:init", () => {
     },
     deleteResults() {
       this.results.splice(0, this.results.length)
+      this.isRightLaneSelected = false
+      this.resetThrowCounter()
       localStorage.removeItem("results")
     },
     deleteLastThrow() {
@@ -202,4 +227,16 @@ const downloadBlob = function (content, filename, contentType) {
   pom.href = url
   pom.setAttribute("download", filename)
   pom.click()
+}
+
+const getCurrentLaneThrows = function (results, selectedLane) {
+  let count = 0
+  for (let i = results.length - 1; i >= 0; i--) {
+    if (results[i].lane === selectedLane) {
+      count++
+    } else {
+      break
+    }
+  }
+  return count
 }

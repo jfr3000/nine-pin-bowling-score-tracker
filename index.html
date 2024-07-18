@@ -8,7 +8,7 @@
   <script src="index.js"></script>
 </head>
 
-<body x-data="{isRightLaneSelected: false, settingsOpen: false}">
+<body x-data="{settingsOpen: false}">
   <h1>Kegel-Tracker</h1>
 
   <div x-show="!settingsOpen">
@@ -16,11 +16,11 @@
       <template x-for="i in [...Array(10).keys()].reverse()">
         <button
           x-text="i"
-          @click="$store.app.addResult(isRightLaneSelected ? 'right' : 'left' , i)"
+          @click="$store.app.addResult(i)"
         />
       </template>
       <label class="toggle-container">
-        <input type="checkbox" x-model="isRightLaneSelected">
+        <input type="checkbox" x-model="$store.app.isRightLaneSelected">
         <span class="slider"></span>
         <div class="labels">
           <span class="left-label" x-text="labels.toggleLeft"></span>
