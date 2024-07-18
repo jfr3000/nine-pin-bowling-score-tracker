@@ -49,7 +49,7 @@
         </tbody>
       </table>
       <div class="action-buttons">
-        <button @click="$store.app.exportAsTSV()" x-text="labels.export"></button>
+        <button @click="$store.app.exportFile()" x-text="labels.export"></button>
         <button @click="$store.app.deleteResults()" x-text="labels.delete"></button>
         <button @click="settingsOpen = true" x-text="labels.configure"></button>
       </div>

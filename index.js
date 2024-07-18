@@ -60,7 +60,7 @@ document.addEventListener("alpine:init", () => {
         return userRow.map((columnId) => renderFuncsForRow[columnId]())
       })
     },
-    exportAsTSV() {
+    exportFile() {
       const completedTable = this.renderTableFromRawResults()
       const date = getFormattedDate()
       const rows = completedTable
@@ -75,7 +75,7 @@ document.addEventListener("alpine:init", () => {
       const tsv = [header.join("\t"), rows].join("\n")
       downloadBlob(
         tsv,
-        `${date}.tsv`,
+        `${date}.csv`,
         "text/tab-separated-values;charset=utf-8;"
       )
     },
