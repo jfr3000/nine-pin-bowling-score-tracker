@@ -76,7 +76,7 @@ document.addEventListener("alpine:init", () => {
       downloadBlob(
         tsv,
         `${date}.csv`,
-        "text/tab-separated-values;charset=utf-8;"
+        "text/comma-separated-values;charset=utf-8;"
       )
     },
     deleteResults() {
