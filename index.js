@@ -51,33 +51,38 @@ document.addEventListener("alpine:init", () => {
         sevenAverageDiff: () => getSevenAverageDiffForLine(this.results, i),
       }
     },
-    renderTableFromRawResults() {
+    renderTableFromRawResults({ forExport } = {}) {
       const userRow = this.settings
         .filter((setting) => setting.display)
         .map((setting) => setting.id)
       return this.results.map((_, i) => {
         const renderFuncsForRow = this.getRenderFuncsForRow(i)
-        return userRow.map((columnId) => renderFuncsForRow[columnId]())
+        return forExport
+          ? userRow.reduce(
+            (rowObject, columnId) => {
+              rowObject[labels[columnId]] = renderFuncsForRow[columnId]()
+              return rowObject
+            },
+            { [labels.date]: getFormattedDate() }
+          )
+          : userRow.map((columnId) => renderFuncsForRow[columnId])
       })
     },
     exportFile() {
-      const completedTable = this.renderTableFromRawResults()
-      const date = getFormattedDate()
-      const rows = completedTable
-        .map((row) => {
-          const rowArray = Object.values(row)
-          rowArray.unshift(date)
-          return rowArray.join("\t")
-        })
-        .join("\n")
-      const header = this.header.map((c) => c.label)
-      header.unshift(labels.date)
-      const tsv = [header.join("\t"), rows].join("\n")
-      downloadBlob(
-        tsv,
-        `${date}.csv`,
-        "text/comma-separated-values;charset=utf-8;"
-      )
+      const completedTable = this.renderTableFromRawResults({ forExport: true })
+      const worksheet = XLSX.utils.json_to_sheet(completedTable)
+
+      // Create a new workbook and append the worksheet
+      const workbook = XLSX.utils.book_new()
+      XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1")
+
+      // Create XLSX file and initiate download
+      const xlsData = XLSX.write(workbook, {
+        bookType: "xlsx",
+        type: "binary",
+      })
+
+      downloadBlob(s2ab(xlsData), `${getFormattedDate()}.xlsx`, "application/octet-stream")
     },
     deleteResults() {
       this.results.splice(0, this.results.length)
@@ -219,14 +224,18 @@ const getFormattedDate = function () {
   return `${year}-${month}-${day}`
 }
 
-const downloadBlob = function (content, filename, contentType) {
-  var blob = new Blob([content], { type: contentType })
-  var url = URL.createObjectURL(blob)
-
-  var pom = document.createElement("a")
-  pom.href = url
-  pom.setAttribute("download", filename)
-  pom.click()
+const downloadBlob = function (blobData, filename, contentType) {
+  const blob = new Blob([blobData], {
+    type: contentType,
+  })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement("a")
+  a.href = url
+  a.download = filename
+  document.body.appendChild(a)
+  a.click()
+  document.body.removeChild(a)
+  URL.revokeObjectURL(url)
 }
 
 const getCurrentLaneThrows = function (results, selectedLane) {
@@ -239,4 +248,13 @@ const getCurrentLaneThrows = function (results, selectedLane) {
     }
   }
   return count
+}
+
+const s2ab = function (s) {
+  const buf = new ArrayBuffer(s.length)
+  const view = new Uint8Array(buf)
+  for (let i = 0; i < s.length; i++) {
+    view[i] = s.charCodeAt(i) & 0xff
+  }
+  return buf
 }
